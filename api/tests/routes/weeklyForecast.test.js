@@ -5,13 +5,8 @@ const mockedData = require('../mockData');
 
 jest.mock('axios');
 
-beforeAll(async () => {
-  console.log('Jest starting!');
-});
-
-afterAll(() => {
-  server.close();
-  console.log('server closed!');
+afterAll(done => {
+  server.close(done);
 });
 
 describe('weekly forecast', () => {

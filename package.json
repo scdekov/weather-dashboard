@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll",
-    "apidev": "nodemon api/src/server.js"
+    "test": "jest",
+    "apidev": "APP_SECRET=dev NODE_ENV=dev nodemon api/src/server.js"
   },
   "author": "",
   "license": "ISC",

@@ -9,18 +9,18 @@ const registerHandler = async ctx => {
   const userData = ctx.request.body;
   if (!isValidUserData(userData)) {
     ctx.response.status = 400;
-    ctx.response.body = { 'detail': 'Bad data' };
+    ctx.response.body = { detail: 'Bad data' };
     return;
   }
 
   if (auth.userExists(userData)) {
     ctx.response.status = 400;
-    ctx.response.body = { 'detail': 'User already exists' };
+    ctx.response.body = { detail: 'User already exists' };
     return;
   }
 
   await auth.addUser(userData);
-  ctx.status = 201;
+  ctx.status = 200;
 };
 
 const loginHandler = async (ctx, next) => {
@@ -28,7 +28,7 @@ const loginHandler = async (ctx, next) => {
 
   if (!isValidUserData(userData)) {
     ctx.response.status = 400;
-    ctx.response.body = { 'detail': 'Bad data' };
+    ctx.response.body = { detail: 'Bad data' };
     return;
   }
 
@@ -37,7 +37,6 @@ const loginHandler = async (ctx, next) => {
     ctx.response.body = { detail: 'User not found' };
     return;
   }
-
   const sessionid = session.createSession({ user: userData.username });
   ctx.cookies.set('sessionid', sessionid, { signed: true });
   ctx.response.status = 200;
