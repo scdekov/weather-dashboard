@@ -19,7 +19,7 @@ const registerHandler = async ctx => {
     return;
   }
 
-  auth.addUser(userData);
+  await auth.addUser(userData);
   ctx.status = 201;
 };
 
@@ -32,8 +32,7 @@ const loginHandler = async (ctx, next) => {
     return;
   }
 
-  if (!auth.userExists(userData)) {
-    console.log('not exists')
+  if (!await auth.authenticateUser(userData)) {
     ctx.response.status = 401;
     ctx.response.body = { detail: 'User not found' };
     return;
@@ -41,7 +40,6 @@ const loginHandler = async (ctx, next) => {
 
   const sessionid = session.createSession({ user: userData.username });
   ctx.cookies.set('sessionid', sessionid, { signed: true });
-
   ctx.response.status = 200;
 };
 
