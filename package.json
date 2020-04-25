@@ -12,8 +12,10 @@
   "dependencies": {
     "axios": "^0.19.2",
     "koa": "^2.11.0",
+    "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
-    "koa-route": "^3.2.0"
+    "koa-route": "^3.2.0",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "jest": "^25.4.0",
