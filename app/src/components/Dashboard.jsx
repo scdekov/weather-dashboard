@@ -66,7 +66,7 @@ export const Dashboard = ({ onUnauthenticated }) => {
       {!loading && (
         <Container>
           <Divider section horizontal>
-            Weather Forecast
+            Weather Forecast for Sofia, Bulgaria
           </Divider>
           <Grid celled>
             <Grid.Row>
