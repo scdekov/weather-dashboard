@@ -9,14 +9,13 @@ const requireAuthnetication = handler => {
 };
 
 const requireAdmin = handler => {
-  const authenticated = requireAuthnetication(handler);
   const inner = (ctx, ...args) => {
     if (!ctx.user.isAdmin) {
       ctx.throw(403);
     }
-    return authenticated(ctx, ...args);
+    return handler(ctx, ...args);
   };
-  return inner;
+  return requireAuthnetication(inner);
 }
 
 module.exports = { requireAuthnetication, requireAdmin };

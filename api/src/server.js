@@ -6,8 +6,10 @@ const cors = require('@koa/cors');
 const session = require('./services/session');
 const weeklyForecastHandler = require('./routes/weeklyForecast').weeklyForecastHandler;
 const authHandlers = require('./routes/auth');
+const getUsersHandler = require('./routes/users').getUsersHandler;
 const auth = require('./services/auth');
 const requireAuthnetication = require('./routeUtils').requireAuthnetication;
+const requireAdmin = require('./routeUtils').requireAdmin;
 const authenticateUserMiddleware = require('./middlewares').authenticateUserMiddleware;
 
 const app = new Koa();
@@ -23,6 +25,7 @@ app.use(authenticateUserMiddleware);
 
 // TODO: verify handling of unknown paths
 app.use(_.get(`${API_V1_PREFIX}/weekly-forecast`, requireAuthnetication(weeklyForecastHandler)));
+app.use(_.get(`${API_V1_PREFIX}/get-users`, requireAdmin(getUsersHandler)));
 
 app.use(_.post(`${API_V1_PREFIX}/login`, authHandlers.loginHandler));
 app.use(_.post(`${API_V1_PREFIX}/register`, authHandlers.registerHandler));

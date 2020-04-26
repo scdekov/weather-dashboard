@@ -25,6 +25,11 @@ const authenticateUser = async userData => {
   return  null;
 };
 
+const getUser = username => {
+  const users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
+  return users[username] ? { ...users[username], username: username } : null;
+};
+
 const ensureUsersFile = () => {
   if (!fs.existsSync(config.USERS_FILE_PATH)) {
     fs.writeFileSync(config.USERS_FILE_PATH, "{}");
@@ -36,4 +41,4 @@ const ensureUsersFile = () => {
   }
 };
 
-module.exports = { addUser, userExists, ensureUsersFile, authenticateUser };
+module.exports = { addUser, userExists, ensureUsersFile, authenticateUser, getUser };

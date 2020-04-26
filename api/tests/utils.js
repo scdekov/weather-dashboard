@@ -18,9 +18,9 @@ const extractCookies = headers => {
 };
 
 // note: this require middleares module to be mocked. should this mocking be happening here?
-const authenticateUser = (username='svetlio') => {
+const authenticateUser = (username='svetlio', isAdmin=false) => {
   middlewares.authenticateUserMiddleware.mockImplementationOnce(async (ctx, next) => {
-    ctx.user = username;
+    ctx.user = username ? { username, isAdmin } : null;
     await next();
   });
 };
