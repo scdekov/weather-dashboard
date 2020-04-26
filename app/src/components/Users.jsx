@@ -24,6 +24,11 @@ export const Users = ({ onUnauthenticated }) => {
     fetchData();
   }, []);
 
+  const onUserDelete = async username => {
+    await axios.post(`${API_URL}/delete-user`, { username })
+    setUsersData(usersData.filter(userData => userData.username !== username));
+  };
+
   return (
     <div>
       <Dimmer active={loading}>
@@ -45,7 +50,8 @@ export const Users = ({ onUnauthenticated }) => {
                   <Table.Cell key={`${ix}cel2`}
                               textAlign="center">
                     {!user.isAdmin && (
-                      <a href="#">
+                      <a href="#"
+                         onClick={() => onUserDelete(user.username)}>
                         <Icon name="user delete"/>
                       </a>
                     )}
