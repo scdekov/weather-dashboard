@@ -4,7 +4,7 @@ import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import { API_URL } from '../config';
 import { AuthHeader } from './AuthHeader';
 
-export const Login = ({ setAuthenticated, showRegister }) => {
+export const Login = ({ setAuthenticated, showRegister, setIsUserAdmin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState();
@@ -16,8 +16,9 @@ export const Login = ({ setAuthenticated, showRegister }) => {
     setErrorMessage('');
 
     try {
-      await axios.post(`${API_URL}/login`, { username, password });
+      const resp = await axios.post(`${API_URL}/login`, { username, password });
       setAuthenticated(true);
+      setIsUserAdmin(resp.data.isAdmin);
     } catch (error) {
       const status = error.response.status;
       if (status === 401) {

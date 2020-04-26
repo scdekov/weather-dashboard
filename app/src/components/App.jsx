@@ -10,7 +10,13 @@ import '../css/App.css';
 axios.defaults.withCredentials = true;
 
 export const App = () => {
-  const [authenticated, setAuthenticated] = useState(true);
+  const [authenticated, setAuthenticated] = useState(!!localStorage.getItem('authenticated') || false);
+  const [isUserAdmin, setIsUserAdmin] = useState(!!localStorage.getItem('isUserAdmin') || false);
+
+  React.useEffect(() => {
+    localStorage.setItem('authenticated', authenticated ? 1 : "");
+    localStorage.setItem('isUserAdmin', isUserAdmin ? 1 : "");
+  }, [authenticated, isUserAdmin]);
 
   return (
     authenticated ?(
@@ -19,6 +25,6 @@ export const App = () => {
         <Dashboard onUnauthenticated={() => setAuthenticated(false)}/>
       </div>
       ):
-      <Auth setAuthenticated={setAuthenticated}/>
+      <Auth setAuthenticated={setAuthenticated} setIsUserAdmin={setIsUserAdmin}/>
   );
 };
