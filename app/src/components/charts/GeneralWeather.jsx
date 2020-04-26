@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../css/GeneralWeatherChart.css';
+import * as icons from '../../icons/index';
 
 export const GeneralWeatherChart = ({ data }) => {
   const toTitleCase = str => str[0].toUpperCase() + str.slice(1);
