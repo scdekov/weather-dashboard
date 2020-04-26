@@ -1,0 +1,12 @@
+.general-weather-chart {
+  width: 500px;
+  height: 300px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.general-weather-chart .chart-item {
+  flex: 1 0 21%;
+  margin: 0 5px 25px 5px;
+  text-align: center;
+}

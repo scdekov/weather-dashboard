@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css';
 import { Auth } from './Auth';
+import { Dashboard } from './Dashboard';
+import '../css/App.css';
+
+axios.defaults.withCredentials = true;
 
 export const App = () => {
-  // TODO: set authenticated to true by default and than to false if api returns 401
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(true);
   return (
-    authenticated ? "Authenticated" : <Auth setAuthenticated={setAuthenticated}/>
+    authenticated ?
+      <Dashboard onUnauthenticated={() => setAuthenticated(false)}/> :
+      <Auth setAuthenticated={setAuthenticated}/>
   );
 };

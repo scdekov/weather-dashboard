@@ -20,7 +20,6 @@ const extractCookies = headers => {
 // note: this require middleares module to be mocked. should this mocking be happening here?
 const authenticateUser = (username='svetlio') => {
   middlewares.authenticateUserMiddleware.mockImplementationOnce(async (ctx, next) => {
-    console.log('using mocked middleware')
     ctx.user = username;
     await next();
   });

@@ -1,0 +1,17 @@
+.recharts-wrapper {
+  margin-bottom: 25px;
+}
+
+.recharts-wrapper svg:not(:root) {
+  overflow: visible;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-container > h3 {
+  margin-left: auto;
+  margin-right: auto;
+}
