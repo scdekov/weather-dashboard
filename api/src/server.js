@@ -26,6 +26,7 @@ app.use(_.get(`${API_V1_PREFIX}/weekly-forecast`, requireAuthnetication(weeklyFo
 
 app.use(_.post(`${API_V1_PREFIX}/login`, authHandlers.loginHandler));
 app.use(_.post(`${API_V1_PREFIX}/register`, authHandlers.registerHandler));
+app.use(_.post(`${API_V1_PREFIX}/logout`, requireAuthnetication(authHandlers.logoutHandler)));
 
 session.ensureSessionsFile();
 auth.ensureUsersFile();

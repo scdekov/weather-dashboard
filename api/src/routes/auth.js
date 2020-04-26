@@ -24,7 +24,7 @@ const registerHandler = async ctx => {
   ctx.status = 200;
 };
 
-const loginHandler = async (ctx, next) => {
+const loginHandler = async ctx => {
   const userData = ctx.request.body;
 
   if (!isValidUserData(userData)) {
@@ -43,4 +43,12 @@ const loginHandler = async (ctx, next) => {
   ctx.response.status = 200;
 };
 
-module.exports = { registerHandler, loginHandler };
+const logoutHandler = async ctx => {
+  const sessionid = ctx.cookies.get('sessionid');
+  if (sessionid) {
+    session.deleteSession(sessionid);
+  }
+  ctx.response.status = 200;
+};
+
+module.exports = { registerHandler, loginHandler, logoutHandler };

@@ -15,10 +15,21 @@ const createSession = data => {
   return sessionId;
 };
 
+const deleteSession = sessionId => {
+  let sessions = JSON.parse(fs.readFileSync(config.SESSIONS_FILE_PATH));
+  sessions = Object.keys(sessions).reduce((allSessions, sid) => {
+    if (sid !== sessionId) {
+      allSessions[sid] = sessions[sid];
+    }
+    return allSessions;
+  }, {});
+  fs.writeFileSync(config.SESSIONS_FILE_PATH, JSON.stringify(sessions));
+};
+
 const ensureSessionsFile = () => {
   if (!fs.existsSync(config.SESSIONS_FILE_PATH)) {
     fs.writeFileSync(config.SESSIONS_FILE_PATH, "{}");
   }
 };
 
-module.exports = { createSession, getSession, ensureSessionsFile };
+module.exports = { createSession, getSession, ensureSessionsFile, deleteSession };
