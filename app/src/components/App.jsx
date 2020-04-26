@@ -5,11 +5,13 @@ import { Auth } from './Auth';
 import { Dashboard } from './Dashboard';
 import { API_URL } from '../config';
 import { Menu } from './Menu';
+import { Users } from './Users';
 import '../css/App.css';
 
 axios.defaults.withCredentials = true;
 
 export const App = () => {
+  const [acitvePage, setActivePage] = useState('dashboard');
   const [authenticated, setAuthenticated] = useState(!!localStorage.getItem('authenticated') || false);
   const [isUserAdmin, setIsUserAdmin] = useState(!!localStorage.getItem('isUserAdmin') || false);
 
@@ -21,8 +23,13 @@ export const App = () => {
   return (
     authenticated ?(
       <div>
-        <Menu onLogout={() => setAuthenticated(false)}/>
-        <Dashboard onUnauthenticated={() => setAuthenticated(false)}/>
+        <Menu
+          onLogout={() => setAuthenticated(false)}
+          showDashboard={() => setActivePage('dashboard')}
+          showUsers={() => setActivePage('users')}
+          isUserAdmin={isUserAdmin}/>
+        {acitvePage === 'users' && <Users onUnauthenticated={() => setAuthenticated(false)}/>}
+        {acitvePage === 'dashboard' && <Dashboard onUnauthenticated={() => setAuthenticated(false)}/>}
       </div>
       ):
       <Auth setAuthenticated={setAuthenticated} setIsUserAdmin={setIsUserAdmin}/>

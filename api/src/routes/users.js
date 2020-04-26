@@ -3,7 +3,10 @@ const config = require('../config');
 
 const getUsersHandler = async ctx => {
   let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-  ctx.response.body = Object.keys(users);
+  ctx.response.body = Object.keys(users).map(username => ({
+    username,
+    isAdmin: users[username].isAdmin || false
+  }));
   ctx.response.status = 200;
 };
 
