@@ -1,10 +1,11 @@
 const _ = require('koa-route');
 const Koa = require('koa');
-const weeklyForecastHandler = require('./routes/weeklyForecast').weeklyForecastHandler;
-const authHandlers = require('./routes/auth');
 const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
+const cors = require('@koa/cors');
 const session = require('./services/session');
+const weeklyForecastHandler = require('./routes/weeklyForecast').weeklyForecastHandler;
+const authHandlers = require('./routes/auth');
 const auth = require('./services/auth');
 const requireAuthnetication = require('./routeUtils').requireAuthnetication;
 const authenticateUserMiddleware = require('./middlewares').authenticateUserMiddleware;
@@ -14,6 +15,7 @@ const API_V1_PREFIX = '/api/v1'
 
 app.keys = [process.env.APP_SECRET];
 
+app.use(cors());
 app.use(bodyParser());
 app.use(logger());
 app.use(authenticateUserMiddleware);
