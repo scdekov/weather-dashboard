@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "apidev": "APP_SECRET=dev NODE_ENV=dev nodemon api/src/server.js"
+    "apidev": "APP_SECRET=dev NODE_ENV=dev nodemon --ignore 'app/*' --ignore '**/*.json' api/src/server.js"
   },
   "author": "",
   "license": "ISC",
