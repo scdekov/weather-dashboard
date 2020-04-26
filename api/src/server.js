@@ -12,10 +12,11 @@ const authenticateUserMiddleware = require('./middlewares').authenticateUserMidd
 
 const app = new Koa();
 const API_V1_PREFIX = '/api/v1'
+const FRONT_END_ORIGIN = 'http://localhost:8080';
 
 app.keys = [process.env.APP_SECRET];
 
-app.use(cors());
+app.use(cors({ origin: () => FRONT_END_ORIGIN, credentials: true }));
 app.use(bodyParser());
 app.use(logger());
 app.use(authenticateUserMiddleware);
