@@ -8,6 +8,7 @@ const isValidUserData = userData => {
 const registerHandler = async ctx => {
   const userData = ctx.request.body;
   if (!isValidUserData(userData)) {
+    // TOOD: extract this in validator and use ctx.throw
     ctx.response.status = 400;
     ctx.response.body = { detail: 'Bad data' };
     return;
