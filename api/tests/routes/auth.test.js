@@ -59,16 +59,12 @@ describe('auth login', () => {
     fs.writeFileSync(config.USERS_FILE_PATH, `{"${USER}": {"password": "${hashedPass}"}}`);
   });
 
-  const sessionExists = sessionId => {
-    let sessions = JSON.parse(fs.readFileSync(config.SESSIONS_FILE_PATH));
-    return !!sessions[sessionId];
-  };
-
   test('success', async () => {
     const response = await request(server).post(LOGIN_URL)
                                           .send({ username: USER, password: PASS });
     expect(response.status).toEqual(200);
     expect(extractCookies(response.header)).toHaveProperty('sessionid');
+    expect(response.body.isAdmin).toBe(false);
   });
 
   test('bad data', async () => {

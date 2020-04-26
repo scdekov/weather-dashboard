@@ -33,14 +33,17 @@ const loginHandler = async ctx => {
     return;
   }
 
-  if (!await auth.authenticateUser(userData)) {
+  const user = await auth.authenticateUser(userData);
+  if (!user) {
     ctx.response.status = 401;
     ctx.response.body = { detail: 'User not found' };
     return;
   }
+
   const sessionid = session.createSession({ user: userData.username });
   ctx.cookies.set('sessionid', sessionid, { signed: true });
   ctx.response.status = 200;
+  ctx.body = { isAdmin: user.isAdmin || false };
 };
 
 const logoutHandler = async ctx => {

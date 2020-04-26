@@ -16,9 +16,13 @@ const userExists = user => {
   return !!users[user.username];
 };
 
-const authenticateUser = async user => {
-  let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-  return users[user.username] && await bcrypt.compare(user.password, users[user.username].password);
+const authenticateUser = async userData => {
+  const users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
+  const user = users[userData.username];
+  if (user && await bcrypt.compare(userData.password, user.password)) {
+    return user;
+  }
+  return  null;
 };
 
 const ensureUsersFile = () => {
