@@ -16,7 +16,7 @@ const registerHandler = async ctx => {
 
   if (auth.userExists(userData)) {
     ctx.response.status = 400;
-    ctx.response.body = { detail: 'User already exists' };
+    ctx.response.body = { detail: 'User with this username already exists' };
     return;
   }
 
