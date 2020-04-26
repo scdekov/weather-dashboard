@@ -30,15 +30,26 @@ const getUser = username => {
   return users[username] ? { ...users[username], username: username } : null;
 };
 
+const deleteUser = username => {
+  let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
+  users = Object.keys(users).reduce((allUsers, u) => {
+    if (u !== username) {
+      allUsers[u] = users[u];
+    }
+    return allUsers;
+  }, {});
+  fs.writeFileSync(config.USERS_FILE_PATH, JSON.stringify(users));
+};
+
 const ensureUsersFile = () => {
   if (!fs.existsSync(config.USERS_FILE_PATH)) {
     fs.writeFileSync(config.USERS_FILE_PATH, "{}");
     addUser({
-      username: 'admin',
+      username: config.ADMIN_USERNAME,
       password: config.ADMIN_PASSWORD,
       isAdmin: true
     });
   }
 };
 
-module.exports = { addUser, userExists, ensureUsersFile, authenticateUser, getUser };
+module.exports = { addUser, userExists, ensureUsersFile, authenticateUser, getUser, deleteUser };

@@ -9,5 +9,6 @@ module.exports = {
     USERS_FILE_PATH: `${__dirname}/services/usersData-${process.env.NODE_ENV}.json`,
     SESSIONS_FILE_PATH: `${__dirname}/services/sessionsData-${process.env.NODE_ENV}.json`,
 
+    ADMIN_USERNAME: 'admin',
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
 };
