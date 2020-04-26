@@ -22,7 +22,7 @@ describe('auth register', () => {
 
   const userExsits = (username, password) => {
     let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-    return !!(users[username] && bcrypt.compare(password, users[username]));
+    return !!(users[username] && bcrypt.compare(password, users[username].password));
   };
 
   test('success', async () => {
@@ -56,7 +56,7 @@ describe('auth login', () => {
 
   beforeEach(async () => {
     const hashedPass = await bcrypt.hash(PASS, config.PASSWORD_SALT_ROUNDS);
-    fs.writeFileSync(config.USERS_FILE_PATH, `{"${USER}": "${hashedPass}"}`);
+    fs.writeFileSync(config.USERS_FILE_PATH, `{"${USER}": {"password": "${hashedPass}"}}`);
   });
 
   const sessionExists = sessionId => {
