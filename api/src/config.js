@@ -7,5 +7,5 @@ module.exports = {
     PASSWORD_SALT_ROUNDS: 10,
 
     ADMIN_USERNAME: 'admin',
-    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'admin'
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
 };

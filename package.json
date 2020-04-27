@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "apidev": "ADMIN_PASSWORD=admin APP_SECRET=dev NODE_ENV=dev nodemon --ignore 'app/*' --ignore '**/*.json' api/src/server.js"
+    "apidev": "nodemon --ignore 'app/*' --ignore '**/*.json' api/src/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "babel-loader": "^8.1.0",
     "bcrypt": "^4.0.1",
     "css-loader": "^3.5.3",
+    "dotenv": "^8.2.0",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.2.0",
     "koa": "^2.11.0",

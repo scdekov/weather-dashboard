@@ -4,6 +4,7 @@ const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
 const mongoose = require('mongoose');
+require('dotenv').config()
 const weeklyForecastHandler = require('./routes/weeklyForecast').weeklyForecastHandler;
 const authHandlers = require('./routes/auth');
 const usersHandlers = require('./routes/users');
