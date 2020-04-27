@@ -28,7 +28,6 @@ app.use(bodyParser());
 app.use(logger());
 app.use(authenticateUserMiddleware);
 
-// TODO: verify handling of unknown paths
 app.use(_.get(`${API_V1_PREFIX}/weekly-forecast`, requireAuthnetication(weeklyForecastHandler)));
 
 app.use(_.get(`${API_V1_PREFIX}/get-users`, requireAdmin(usersHandlers.getUsersHandler)));
