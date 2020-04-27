@@ -26,7 +26,7 @@ npm install
 ## Create .env file
 ```
 cp .env.sample .env
-sed -i 's/<your-owm-api-key>/apikey/g' .env
+sed -i 's/owmapikey/<your-owm-api-key>/g' .env
 ```
 In this file you can configure variables used in the app:
 * `ADMIN_PASSWORD` - "admin" is the default
