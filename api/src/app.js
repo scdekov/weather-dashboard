@@ -15,12 +15,12 @@ const authenticateUserMiddleware = require('./middlewares').authenticateUserMidd
 
 const app = new Koa();
 const API_V1_PREFIX = '/api/v1'
-const FRONT_END_ORIGIN = 'http://localhost:8080';
+const FRONT_END_ORIGIN = process.env.FRONT_END_ORIGIN;
 
 app.keys = [process.env.APP_SECRET];
 
 mongoose
-  .connect(`mongodb://localhost:27017/weatherdb-${process.env.NODE_ENV}`,
+  .connect(`mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/weatherdb-${process.env.NODE_ENV}`,
            { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('db connected'))
 
