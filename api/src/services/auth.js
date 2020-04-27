@@ -1,55 +1,42 @@
 const bcrypt = require('bcrypt');
-const fs = require('fs');
 const config = require('../config');
+const User = require('../models/User').User;
 
 const addUser = async user => {
-  let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-  users[user.username] = {
+  await new User({
+    username: user.username,
     password: await bcrypt.hash(user.password, config.PASSWORD_SALT_ROUNDS),
     isAdmin: user.isAdmin || false
-  };
-  fs.writeFileSync(config.USERS_FILE_PATH, JSON.stringify(users));
+  }).save();
 };
 
-const userExists = user => {
-  let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-  return !!users[user.username];
+const userExists = async user => {
+  return await User.exists({ username: user.username });
 };
 
 const authenticateUser = async userData => {
-  const users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-  const user = users[userData.username];
+  const user = await User.findOne({ username: userData.username });
   if (user && await bcrypt.compare(userData.password, user.password)) {
     return user;
   }
   return  null;
 };
 
-const getUser = username => {
-  const users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-  return users[username] ? { ...users[username], username: username } : null;
+const getUser = async username => {
+  return await User.findOne({ username: username });
 };
 
-const deleteUser = username => {
-  let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-  users = Object.keys(users).reduce((allUsers, u) => {
-    if (u !== username) {
-      allUsers[u] = users[u];
-    }
-    return allUsers;
-  }, {});
-  fs.writeFileSync(config.USERS_FILE_PATH, JSON.stringify(users));
+const deleteUser = async username => {
+  await User.deleteOne({ username });
 };
 
-const ensureUsersFile = () => {
-  if (!fs.existsSync(config.USERS_FILE_PATH)) {
-    fs.writeFileSync(config.USERS_FILE_PATH, "{}");
-    addUser({
+const ensureAdminUser = async () => {
+  await User.exists({ username: config.ADMIN_USERNAME }) ||
+    await addUser({
       username: config.ADMIN_USERNAME,
       password: config.ADMIN_PASSWORD,
       isAdmin: true
     });
-  }
 };
 
-module.exports = { addUser, userExists, ensureUsersFile, authenticateUser, getUser, deleteUser };
+module.exports = { addUser, userExists, authenticateUser, getUser, deleteUser, ensureAdminUser };

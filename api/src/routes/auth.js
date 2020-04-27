@@ -14,7 +14,7 @@ const registerHandler = async ctx => {
     return;
   }
 
-  if (auth.userExists(userData)) {
+  if (await auth.userExists(userData)) {
     ctx.response.status = 400;
     ctx.response.body = { detail: 'User with this username already exists' };
     return;
@@ -40,7 +40,7 @@ const loginHandler = async ctx => {
     return;
   }
 
-  const sessionid = session.createSession({ user: userData.username });
+  const sessionid = await session.createSession(userData.username);
   ctx.cookies.set('sessionid', sessionid, { signed: true });
   ctx.response.status = 200;
   ctx.body = { isAdmin: user.isAdmin || false };
@@ -49,7 +49,7 @@ const loginHandler = async ctx => {
 const logoutHandler = async ctx => {
   const sessionid = ctx.cookies.get('sessionid');
   if (sessionid) {
-    session.deleteSession(sessionid);
+    await session.deleteSession(sessionid);
   }
   ctx.response.status = 200;
 };

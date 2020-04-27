@@ -1,13 +1,8 @@
-const fs = require('fs');
-const config = require('../config');
 const auth = require('../services/auth');
+const User = require('../models/User').User;
 
 const getUsersHandler = async ctx => {
-  let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-  ctx.response.body = Object.keys(users).map(username => ({
-    username,
-    isAdmin: users[username].isAdmin || false
-  }));
+  ctx.response.body = await User.find({}, 'username isAdmin');
   ctx.response.status = 200;
 };
 
@@ -19,14 +14,14 @@ const deleteUserHandler = async ctx => {
     return;
   }
 
-  const user = auth.getUser(username);
+  const user = await auth.getUser(username);
   if (user.isAdmin) {
     ctx.response.status = 400;
     ctx.body = { detail: 'Can not delete admin' };
     return;
   }
 
-  auth.deleteUser(username);
+  await auth.deleteUser(username);
   ctx.response.status = 200;
 };
 

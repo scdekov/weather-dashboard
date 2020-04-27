@@ -1,35 +1,20 @@
-const fs = require('fs');
 const uuid4 = require('uuid').v4;
 const config = require('../config');
+const Session = require('../models/Session').Session;
 
-const getSession = sessionId => {
-  let sessions = JSON.parse(fs.readFileSync(config.SESSIONS_FILE_PATH));
-  return sessions[sessionId];
+const getSession = async sessionid => {
+  return await Session.findOne({ sessionid });
 };
 
-const createSession = data => {
-  const sessionId = uuid4();
-  let sessions = JSON.parse(fs.readFileSync(config.SESSIONS_FILE_PATH));
-  sessions[sessionId] = data;
-  fs.writeFileSync(config.SESSIONS_FILE_PATH, JSON.stringify(sessions));
-  return sessionId;
+const createSession = async username => {
+  const sessionid = uuid4();
+  const newSession = new Session({ sessionid, username });
+  await newSession.save();
+  return sessionid;
 };
 
-const deleteSession = sessionId => {
-  let sessions = JSON.parse(fs.readFileSync(config.SESSIONS_FILE_PATH));
-  sessions = Object.keys(sessions).reduce((allSessions, sid) => {
-    if (sid !== sessionId) {
-      allSessions[sid] = sessions[sid];
-    }
-    return allSessions;
-  }, {});
-  fs.writeFileSync(config.SESSIONS_FILE_PATH, JSON.stringify(sessions));
+const deleteSession = async sessionid => {
+  await Session.deleteOne({ sessionid });
 };
 
-const ensureSessionsFile = () => {
-  if (!fs.existsSync(config.SESSIONS_FILE_PATH)) {
-    fs.writeFileSync(config.SESSIONS_FILE_PATH, "{}");
-  }
-};
-
-module.exports = { createSession, getSession, ensureSessionsFile, deleteSession };
+module.exports = { createSession, getSession, deleteSession };

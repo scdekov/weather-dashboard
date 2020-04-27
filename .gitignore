@@ -1,6 +1,3 @@
 node_modules/
 package-lock.json
 .vscode/
-
-api/src/services/usersData*
-api/src/services/sessionsData*

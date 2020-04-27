@@ -6,8 +6,8 @@ const authenticateUserMiddleware = async (ctx, next) => {
   if (!sessionId) {
     ctx.user = null;
   } else {
-    const userSession = session.getSession(sessionId);
-    ctx.user = userSession ? auth.getUser(userSession.user) : null;
+    const userSession = await session.getSession(sessionId);
+    ctx.user = userSession ? await auth.getUser(userSession.username) : null;
   }
   await next();
 };
