@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "apidev": "nodemon --ignore 'app/*' --ignore '**/*.json' api/src/server.js"
+    "apidev": "nodemon --ignore 'app/*' --ignore '**/*.json' api/src/server.js",
+    "app": "webpack-dev-server"
   },
   "author": "",
   "license": "ISC",
