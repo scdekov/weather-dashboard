@@ -31,12 +31,14 @@ const deleteUser = async username => {
 };
 
 const ensureAdminUser = async () => {
-  await User.exists({ username: config.ADMIN_USERNAME }) ||
+  try {
     await addUser({
       username: config.ADMIN_USERNAME,
       password: config.ADMIN_PASSWORD,
       isAdmin: true
     });
+  } catch (e) {
+  }
 };
 
 module.exports = { addUser, userExists, authenticateUser, getUser, deleteUser, ensureAdminUser };

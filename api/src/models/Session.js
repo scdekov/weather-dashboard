@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const SessionSchema = new mongoose.Schema({
   sessionid: {
     type: String,
-    required: true
+    required: true,
+    index: true,
+    unique: true
   },
   username: {
     type: String,

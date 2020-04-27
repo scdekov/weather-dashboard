@@ -1,16 +1,26 @@
 const request = require('supertest');
-const fs = require('fs');
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose')
 const server = require('../../src/server');
 const config = require('../../src/config');
 const extractCookies = require('../utils').extractCookies;
+const auth = require('../../src/services/auth');
+const User = require('../../src/models/User').User;
+const Session = require('../../src/models/Session').Session;
 
-beforeEach(() => {
-  fs.writeFileSync(config.USERS_FILE_PATH, "{}");
-  fs.writeFileSync(config.SESSIONS_FILE_PATH, "{}");
+beforeAll(async done => {
+  await auth.ensureAdminUser();
+  done();
 });
 
-afterAll(done => {
+beforeEach(async done => {
+  await User.deleteMany({ username : {$ne: config.ADMIN_USERNAME}});
+  await Session.deleteMany({});
+  done();
+});
+
+afterAll(async done => {
+  await mongoose.disconnect();
   server.close(done);
 });
 
@@ -20,51 +30,44 @@ const PASS = 'secret';
 describe('auth register', () => {
   const REGISTER_URL = '/api/v1/register';
 
-  const userExsits = (username, password) => {
-    let users = JSON.parse(fs.readFileSync(config.USERS_FILE_PATH));
-    return !!(users[username] && bcrypt.compare(password, users[username].password));
-  };
-
   test('success', async () => {
+    expect(await User.countDocuments()).toBe(1);
+
     const response = await request(server).post(REGISTER_URL)
                                           .send({ username: USER, password: PASS })
+
     expect(response.status).toEqual(200);
-    expect(userExsits(USER, PASS)).toBe(true);
+    expect(await User.countDocuments()).toBe(2);
+    expect(await User.exists({ username: USER, isAdmin: false })).toBe(true);
   });
 
   test('invalid data', async () => {
     const response = await request(server).post(REGISTER_URL)
                                           .send({ username: USER })
     expect(response.status).toEqual(400);
-    expect(userExsits(USER, PASS)).toBe(false);
+    expect(await User.countDocuments()).toBe(1);
   });
 
   test('user already exists', async () => {
     const response = await request(server).post(REGISTER_URL)
                                           .send({ username: USER, password: PASS })
     expect(response.status).toEqual(200);
-    expect(userExsits(USER, PASS)).toBe(true);
+    expect(await User.exists({ username: USER })).toBe(true);
     const secondResponse = await request(server).post(REGISTER_URL)
-                                          .send({ username: USER, password: PASS })
+                                                .send({ username: USER, password: PASS })
     expect(secondResponse.status).toEqual(400);
-    expect(userExsits(USER, PASS)).toBe(true);
   });
 });
 
 describe('auth login', () => {
   const LOGIN_URL = '/api/v1/login';
 
-  beforeEach(async () => {
-    const hashedPass = await bcrypt.hash(PASS, config.PASSWORD_SALT_ROUNDS);
-    fs.writeFileSync(config.USERS_FILE_PATH, `{"${USER}": {"password": "${hashedPass}"}}`);
-  });
-
   test('success', async () => {
     const response = await request(server).post(LOGIN_URL)
-                                          .send({ username: USER, password: PASS });
+                                          .send({ username: config.ADMIN_USERNAME, password: config.ADMIN_PASSWORD });
     expect(response.status).toEqual(200);
     expect(extractCookies(response.header)).toHaveProperty('sessionid');
-    expect(response.body.isAdmin).toBe(false);
+    expect(response.body.isAdmin).toBe(true);
   });
 
   test('bad data', async () => {
@@ -76,7 +79,7 @@ describe('auth login', () => {
 
   test('wrong credentials', async () => {
     const response = await request(server).post(LOGIN_URL)
-                                          .send({ username: USER, password: 'wrong' });
+                                          .send({ username: config.ADMIN_USERNAME, password: 'wrong' });
     expect(response.status).toEqual(401);
     expect(response.header).not.toHaveProperty('set-cookie');
   });
@@ -86,21 +89,20 @@ describe('auth logout', () => {
   const LOGOUT_URL = '/api/v1/logout';
   const LOGIN_URL = '/api/v1/login';
 
-  beforeEach(async () => {
-    const hashedPass = await bcrypt.hash(PASS, config.PASSWORD_SALT_ROUNDS);
-    fs.writeFileSync(config.USERS_FILE_PATH, `{"${USER}": {"password": "${hashedPass}"}}`);
-  });
-
   test('success', async () => {
-    const loginResp = await request(server).post(LOGIN_URL).send({ username: USER, password: PASS });
+    const loginResp = await request(server)
+      .post(LOGIN_URL)
+      .send({
+        username: config.ADMIN_USERNAME,
+        password: config.ADMIN_PASSWORD
+      });
     expect(loginResp.status).toEqual(200);
 
-    const sessionid = Object.keys(JSON.parse(fs.readFileSync(config.SESSIONS_FILE_PATH)))[0];
-
+    const sessionid = (await Session.find())[0].sessionid;
     const response = await request(server).post(LOGOUT_URL)
       .set('Cookie', [`sessionid=${sessionid}`]);
     expect(response.status).toEqual(200);
-    expect(Object.keys(JSON.parse(fs.readFileSync(config.SESSIONS_FILE_PATH)))[0]).toBeUndefined();
+    expect(await Session.countDocuments()).toBe(0);
   });
 
   test('not logged in', async () => {

@@ -41,6 +41,6 @@ app.use(_.post(`${API_V1_PREFIX}/logout`, requireAuthnetication(authHandlers.log
 
 auth.ensureAdminUser();
 
-const port = (process.env.NODE_ENV !== 'test') ? 3000 : 3002
+const port = (process.env.NODE_ENV !== 'test') ? 3000 : 3002;
 const server = app.listen(port);
 module.exports = server;
