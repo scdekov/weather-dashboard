@@ -15,10 +15,11 @@ const deleteUserHandler = async ctx => {
   }
 
   const user = await auth.getUser(username);
+  if (!user) {
+    ctx.throw(400, 'User not found')
+  }
   if (user.isAdmin) {
-    ctx.response.status = 400;
-    ctx.body = { detail: 'Can not delete admin' };
-    return;
+    ctx.throw(400, 'Can not delete admin');
   }
 
   await auth.deleteUser(username);
