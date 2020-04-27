@@ -25,17 +25,17 @@ npm install
 
 ## Create .env file
 ```
-# from the project root
 cp .env.sample .env
 sed -i 's/<your-owm-api-key>/apikey/g' .env
 ```
 In this file you can configure variables used in the app:
-* ADMIN_PASSWORD - "admin" is the default
-* APP_SECRET - used for signing cookies, "dev" is the default
-* NODE_ENV - "dev" is default
-* FRONT_END_ORIGIN - "http://localhost:8080" is the default
-* MONGO_HOST - "localhost" is the default
-* MONGO_PORT - "27017" is the default
+* `ADMIN_PASSWORD` - "admin" is the default
+* `APP_SECRET` - used for signing cookies, "dev" is the default
+* `NODE_ENV` - "dev" is default
+* `FRONT_END_ORIGIN` - "http://localhost:8080" is the default
+* `MONGO_HOST` - "localhost" is the default
+* `MONGO_PORT` - "27017" is the default
+* `OWM_API_KEY` - your api key for the Open Weather API
 
 ## Run the tests
 ```
